@@ -53,7 +53,7 @@ pipeline {
             post {
                 always {
                     sh 'docker logout'
-                    sh 'docker stop $(docker ps -a -q)'
+                    sh 'docker stop \$(docker ps -a -q)'
                 }
                 success {
                     echo 'Successfully built and pushed the docker image'
