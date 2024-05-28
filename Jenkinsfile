@@ -28,7 +28,10 @@ pipeline {
         stage('Simple Test Nodejs Container') {
             steps {
                 script {
-                    sh "docker stop \$(docker ps -q)"
+                    def runningContainers = sh (script: "docker ps -q", returnStdout: true).trim()
+                    if (runningContainers) {
+                        sh "docker stop $runningContainers"
+                    }
                     sh "docker run --rm -d -p 3000:3000 $IMAGE_REPO_NAME:latest"
                     sh "sleep 5"
                     sh 'if curl -I http://localhost:3000 | grep -q "200 OK"; then echo "Test passed"; else echo "Test failed"; exit 1; fi'
