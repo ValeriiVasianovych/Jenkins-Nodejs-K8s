@@ -53,10 +53,7 @@ pipeline {
             post {
                 always {
                     sh 'docker logout'
-                    def runningContainers = sh (script: "docker ps -q", returnStdout: true).trim()
-                    if (runningContainers) {
-                        sh "docker stop $runningContainers"
-                    }
+                    sh 'docker stop $(docker ps -a -q)'
                 }
                 success {
                     echo 'Successfully built and pushed the docker image'
