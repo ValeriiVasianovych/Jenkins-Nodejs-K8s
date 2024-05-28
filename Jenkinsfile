@@ -9,7 +9,7 @@ pipeline {
         APPLICATION_NAME   = 'nodejs-app'
         AWS_DEFAULT_REGION = 'us-east-1'
         IMAGE_REPO_NAME    = 'nodejs-k8s'
-        AWS_ACCOUNT_ID     = credentials('aws-account-id')
+        AWS_ACCOUNT_ID     = 312211201134
     }
 
     stages {
@@ -42,11 +42,8 @@ pipeline {
         stage('Push Nodejs Container to ECR') {
             steps {
                 script {
-                    withCredentials([string(credentialsId: 'aws-account-id', variable: 'AWS_ACCOUNT_ID')]) {
-                        sh "aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-                        sh "docker tag $IMAGE_REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:latest"
-                        sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:latest"
-                    }
+                    sh "docker tag $IMAGE_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
+                    sh "docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
                 }
             }
             post {
