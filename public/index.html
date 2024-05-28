@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy Node.js to ECR and Amazon EKS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+        }
+
+        .steps {
+            margin-top: 30px;
+        }
+
+        .step {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .step h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .step p {
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Deploy Node.js to ECR and Amazon EKS</h1>
+        <p>Welcome to the deployment guide for deploying your Node.js application to Amazon ECR and Amazon EKS using Jenkins.</p>
+        
+        <div class="steps">
+            <div class="step">
+                <h2>Step 1: Setup Jenkins Pipeline</h2>
+                <p>Set up a Jenkins pipeline to automate the deployment process. Create a Jenkinsfile in your project repository with the necessary steps for building and deploying your application.</p>
+            </div>
+            
+            <div class="step">
+                <h2>Step 2: Configure AWS Credentials</h2>
+                <p>Configure AWS credentials in Jenkins to allow it to access ECR and EKS. Create an IAM user with appropriate permissions and generate access key and secret key.</p>
+            </div>
+            
+            <div class="step">
+                <h2>Step 3: Setup ECR Repository</h2>
+                <p>Create an Amazon ECR repository to store your Docker images. Use the AWS CLI or AWS Management Console to create the repository.</p>
+            </div>
+            
+            <div class="step">
+                <h2>Step 4: Setup Amazon EKS Cluster</h2>
+                <p>Create an Amazon EKS cluster using the AWS Management Console or AWS CLI. Ensure that your Kubernetes configuration is properly set up.</p>
+            </div>
+            
+            <div class="step">
+                <h2>Step 5: Update Jenkinsfile</h2>
+                <p>Update your Jenkinsfile to include steps for deploying your Docker image to ECR and deploying your application to EKS.</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
