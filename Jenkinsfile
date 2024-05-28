@@ -39,17 +39,17 @@ pipeline {
                     sh "docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
                 }
             }
-        }
-
-        post {
-            always {
-                sh 'docker kill \$(docker ps -q)'
-            }
-            success {
-                echo 'Successfully built and pushed the docker image'
-            }
-            failure {
-                echo 'There was some failure in the code'
+            post {
+                always {
+                    sh 'docker logout'
+                    sh 'docker kill $(docker ps -q)'
+                }
+                success {
+                    echo 'Successfully built and pushed the docker image'
+                }
+                failure {
+                    echo 'There was some failure in the code'
+                }
             }
         }
     }
