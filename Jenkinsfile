@@ -22,7 +22,7 @@ pipeline {
         stage('Simple Test Nodejs Container') {
             steps {
                 sh 'ls -la'
-                sh 'docker kill $(docker ps -a -q)'
+                sh "docker stop \$(docker ps -q)"
                 sh 'docker run --rm -d -p 3000:3000 $IMAGE_REPO_NAME:latest'
                 sh 'sleep 5'
                 sh 'if curl -I http://localhost:3000 | grep -q "200 OK"; then echo "Test passed"; else echo "Test failed"; exit 1; fi'
@@ -40,5 +40,16 @@ pipeline {
                 }
             }
         }
+
+        post {
+            always {
+                sh 'docker kill \$(docker ps -q)'
+            }
+            success {
+                echo 'Successfully built and pushed the docker image'
+            }
+            failure {
+                echo 'There was some failure in the code'
+            }
     }
 }
