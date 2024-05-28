@@ -12,7 +12,6 @@ pipeline {
         AWS_ACCOUNT_ID     = credentials('aws-account-id')
     }
 
-
     stages {
         stage('Checkout') {
             steps {
@@ -33,7 +32,14 @@ pipeline {
                 sh "sleep 5"
                 sh 'if curl -I http://localhost:3000 | grep -q "200 OK"; then echo "Test passed"; else echo "Test failed"; exit 1; fi'
             }
+            post {
+                always {
+                    sh 'docker stop $(docker ps -q)'
+                    sh 'docker rm -f $(docker ps -aq)'
+                }
+            }
         }
+
         stage('Push Nodejs Container to ECR') {
             steps {
                 script {
@@ -48,8 +54,6 @@ pipeline {
             post {
                 always {
                     sh 'docker logout'
-                    sh 'docker kill $(docker ps -q)'
-
                 }
                 success {
                     echo 'Successfully built and pushed the docker image'
