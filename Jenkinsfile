@@ -42,18 +42,21 @@ pipeline {
         stage('Push Nodejs Container to ECR') {
             steps {
                 script {
-                    def dockerLogin = """aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com"""
+                    def dockerLogin = """aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"""
                     sh dockerLogin
 
-                    sh "docker tag $IMAGE_REPO_NAME:latest $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
+                    sh "docker tag $IMAGE_REPO_NAME:latest ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:latest"
                 
-                    sh "docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:latest"
+                    sh "docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME:latest"
                 }
             }
             post {
                 always {
                     sh 'docker logout'
-                    sh 'docker stop $(docker ps -q)'
+                    def runningContainers = sh (script: "docker ps -q", returnStdout: true).trim()
+                    if (runningContainers) {
+                        sh "docker stop $runningContainers"
+                    }
                 }
                 success {
                     echo 'Successfully built and pushed the docker image'
