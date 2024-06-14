@@ -25,7 +25,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+                        aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 312211201134.dkr.ecr.us-east-1.amazonaws.com
                     """
                 }
             }
@@ -62,10 +62,10 @@ pipeline {
             steps {
                 script {
                     sh """
-                        docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $REPOSITORY_URI:$IMAGE_TAG
+                        docker tag nodejs-k8s:latest 312211201134.dkr.ecr.us-east-1.amazonaws.com/nodejs-k8s:latest
                     """
                     sh """
-                        docker push ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}
+                        docker push 312211201134.dkr.ecr.us-east-1.amazonaws.com/nodejs-k8s:latest
                     """
                 }
             }
