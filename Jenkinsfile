@@ -12,7 +12,7 @@ pipeline {
         IMAGE_TAG          = 'latest'
         REPOSITORY_URI     = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
         AWS_ACCOUNT_ID     = credentials('aws-account-id')
-        AWS_CREDENTIALS    = credentials('aws-credentials')
+        AWS_CREDENTIALS    = credentials('my-aws-credentials')
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
         stage('Login to AWS ECR') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_key_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([usernamePassword(credentialsId: 'my-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --password-stdin ${REPOSITORY_URI}"
                     }
                 }
@@ -62,7 +62,7 @@ pipeline {
         stage('Push Nodejs Container to ECR') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'aws-credentials', usernameVariable: 'AWS_ACCESS_key_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    withCredentials([usernamePassword(credentialsId: 'my-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh "docker tag $IMAGE_REPO_NAME:$IMAGE_TAG ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                         sh "docker push ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                     }
