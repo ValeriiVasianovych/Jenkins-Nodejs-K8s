@@ -9,6 +9,10 @@ Welcome to the deployment guide for your Node.js application to Amazon ECR and A
 3. **ECR Repository**: Create a repository to store Docker images.
 4. **Amazon EKS Cluster**: Set up a cluster for Kubernetes.
 
+## Preview
+### Example node.js app index.html page:
+![preview](img/preview.png)
+
 ## Quick Steps
 
 1. **Jenkins Pipeline**: Set up a pipeline with build and deploy stages.
