@@ -77,10 +77,10 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'my-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh """
                             aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}
-                            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | kubectl create secret docker-registry aws-ecr-secret --docker-server=${REPOSITORY_URI} --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ${AWS_DEFAULT_REGION})
+                            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | kubectl create secret docker-registry aws-ecr-secret --docker-server="${REPOSITORY_URI}" --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ${AWS_DEFAULT_REGION})
                             kubectl apply -f k8s/
                             kubectl rollout restart deployment/nodejs-deployment
-                        """
+                           """
                     }
                 }
             }
