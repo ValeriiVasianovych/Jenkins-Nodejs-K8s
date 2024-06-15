@@ -6,13 +6,14 @@ pipeline {
     }
 
     environment {
-        APPLICATION_NAME   = 'nodejs-app'
         AWS_DEFAULT_REGION = 'us-east-1'
+        APPLICATION_NAME   = 'nodejs-app'
         IMAGE_REPO_NAME    = 'nodejs-k8s'
         IMAGE_TAG          = 'latest'
-        REPOSITORY_URI     = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+        EKS_CLUSTER_NAME   = 'node-cluster-k8s'
         AWS_ACCOUNT_ID     = credentials('aws-account-id')
         AWS_CREDENTIALS    = credentials('my-aws-credentials')
+        REPOSITORY_URI     = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
     }
 
     stages {
@@ -65,6 +66,21 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'my-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                         sh "docker tag $IMAGE_REPO_NAME:$IMAGE_TAG ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
                         sh "docker push ${REPOSITORY_URI}/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'my-aws-credentials', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                        sh """
+                            aws eks --region ${AWS_DEFAULT_REGION} update-kubeconfig --name ${EKS_CLUSTER_NAME}
+                            aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | kubectl create secret docker-registry aws-ecr-secret --docker-server=${REPOSITORY_URI} --docker-username=AWS --docker-password=$(aws ecr get-login-password --region ${AWS_DEFAULT_REGION})
+                            kubectl apply -f k8s/
+                            kubectl rollout restart deployment/nodejs-deployment
+                        """
                     }
                 }
             }

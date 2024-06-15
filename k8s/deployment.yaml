@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodejs-deployment
+  namespace: default
+  labels:
+    app: nodejs
+    owner: valerii-vasianovych
+spec:
+  selector:
+    matchLabels:
+      app: nodejs
+  template:
+    metadata:
+      labels:
+        app: nodejs
+    spec:
+      containers:
+      - name: nodejs
+        image: 312211201134.dkr.ecr.us-east-1.amazonaws.com/nodejs-k8s:latest
+        ports:
+        - containerPort: 3000
+      imagePullSecrets:
+      - name: aws-ecr-secret
